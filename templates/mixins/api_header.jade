@@ -1,0 +1,33 @@
+- var params;
+mixin api_header(functionName, params, isDef)
+  h3: code #{functionName}
+  - if (params) {
+    h4 Parameters
+    ul
+      - if (isDef) {
+        li
+          strong Type :: 
+          em #{params.type} - 
+            - if (params.isOpt){
+            strong OPTIONAL
+            - } else {
+            strong REQUIRED
+            - }
+        li
+          strong Default Value :: 
+          em #{params.default}
+      - } else {
+        - params.forEach( function(x){
+         li 
+          strong '#{x.name}' :: 
+          - if (x.isOpt) {
+          em #{x.type} - 
+            strong OPTIONAL
+          - } else {
+          em #{x.type} - 
+            strong REQUIRED
+          - }
+        - });
+      - }
+    - }
+  h4 Description

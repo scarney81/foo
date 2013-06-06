@@ -1,0 +1,170 @@
+include api_header
+
+mixin api-statechart
+  section#statechart
+    h2 Stativus.Statechart
+    .basic-api
+      h3: code addState( name, def1, def2, ... )
+      h4 Parameters
+      ul
+        li
+          strong 'name' :: 
+          em String  - REQUIRED
+        li 
+          strong 'def
+          em n
+          strong ' :: 
+          em  Object | Hash - REQUIRED &raquo; see Stativus.State.DefinitionParameters
+      h4 Description
+      p This function creates the state and you pass in the definition of the state.  An interesting bonus is that you 
+        | can send in as many of these as you would like.  This helps when you have the same action or configuration that 
+        | needs to go in several states.
+      h4 Example
+      pre
+        | statechart.addState( 'first_state', {
+        |   // Stativus.State.DefinitionParameters
+        | });
+      hr
+    //- Section
+    .basic-api
+      mixin api_header('initStates( name )', [{name: 'name', type: 'String | Hash'}])
+      p This actually initializes the statechart and make the statechart enter the initial state. If the 
+        strong 'name' 
+        | is a 
+        em String 
+        | then it represents the name of the state in the 
+        em DEFAULT 
+        | statechart. If the value is an 
+        em Hash | Object 
+        | then it represents a key-value pair of the initial states for all the global concurrent states. 
+        | global state = 
+        em KEY 
+        | and initial state name = 
+        em VALUE
+      h4 Example
+      pre
+        | // Example #1: String
+        | statechart.initStates('first_state');
+        | // Example #2: Hash | Object
+        | statechart.initStates({'default': 'first_state', 'modal_states': 'first_modal');
+      hr
+    //- Section
+    .basic-api
+      h3: code sendEvent( name, param1, param2, ... )
+      h4 Parameters
+      ul
+        li
+          strong 'name' :: 
+          em String - REQUIRED
+        li
+          strong 'param
+          em n
+          strong ' :: 
+          em  OPTIONAL
+      h4 Description
+      p This sends an event to all the global concurrent states.  If you are in a state that has the event/action
+        | defined then it will respond with this trigger.  You can have 
+        em N
+        | -number of parameters of any type and they will be passed to the function definition for the event on
+        | the current states.
+      h4 Example
+      pre
+        | // Example #1: no params
+        | statechart.sendEvent('viewMenu');
+        | // Example #2: one param
+        | statechart.sendEvent('openMenuItem', 3);
+        | // Example #3: n-params
+        | statechart.sendEvent('myFavoriteEvent', 3, 'Blue', {lots: 'of', 'other': 'Things'});
+      hr
+    //- Section
+    .basic-api
+      - params = [{name: 'name', type: 'String'}, {name: 'globalState', type: 'String', isOpt: true}]
+      mixin api_header('getState( name, globalState)', params)
+      p This is what you call to fetch a state. The second param, 
+        em 'globalState' 
+        | is an optional param set to the global concurrent state name.  If you don't pass anything in
+        | it defaults to 
+        em 'default'
+        | .
+      h4 Example
+      pre
+        | // Example #1: no global param
+        | var state = statechart.getState('state_one');
+        | // Example #2: global conncurrent state param
+        | var state = statechart.sendEvent('other_state', 'modal_states');
+      hr
+    //- Section
+    .basic-api
+      mixin api_header('currentState( globalState )', [{name: 'globalState', type: 'String', isOpt: true}])
+      p This is a helper function that will give you an array of all the current states that your are in. The param
+        em 'globalState' 
+        | is an optional param set to the global concurrent state name.  If you don't pass anything in
+        | it defaults to 
+        em 'default'
+        | .
+      h4 Example
+      pre
+        | // Example #1: no global param
+        | var states = statechart.currentState();
+        | // Example #2: global conncurrent state param
+        | var states = statechart.currentState('modal_states');
+      hr
+      h4 Function
+      h3: code getActiveStates( globalState)
+      h4 Description
+      p This is an 
+        em alias 
+        | for
+        code currentState( ... )
+      hr
+    //- Section
+    .basic-api
+      - params = [{name: 'name', type: 'String'}, {name: 'globalState', type: 'String', isOpt: true}]
+      mixin api_header('inState( globalState )', params)
+      p This is a helper function when you are using the 
+        em DEBUG_MODE 
+        | version of the code. It will return 
+        em true 
+        | or 
+        em false 
+        | if you are in a state. This can be helpful for debugging. Not to be used in production.
+        | .
+      h4 Example
+      pre
+        | if ( statechart.inState('state_one', 'default') ) {
+        |   // do something ;
+        | } 
+      hr
+      //- Section
+    .testing-api
+      mixin api_header('loadState: function(name, globalStatechart)', [{name: 'name', type: 'String'}, {name:'globalStatechart', type: 'String', isOpt: !0}])
+      p This will convert the statechart to a Testing statechart, loading up the named state and permitting testing on there returned start object.
+      pre
+        | var state = sc.loadState("#testingState");
+        | // or
+        | var state = sc.loadState("#testingState2", "error");
+      h4 Returns
+      ul
+        li 
+          strong Type :: 
+          em Stativus.TestStateObject
+      mixin api_header('createStateTree: function()', [])
+      p This creates a tree representation of the statechart. Where each state
+        is represented similarly to the following example. Additionally, global
+        concurrent states are represented as concurrent states underneath a
+        state named global.
+      pre
+        | {
+        |   events: Array[0]
+        |   hasConcurrentSubstates: true
+        |   initialSubstate: undefined
+        |   isConcurrentSubstate: undefined
+        |   isInitialSubstate: undefined
+        |   name: "global"
+        |   substates: Array[3]
+        | }
+      h4 Returns
+      ul
+        li 
+          strong Type :: 
+          em Hash

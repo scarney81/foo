@@ -1,0 +1,103 @@
+include api_header
+
+mixin api-state-events
+  section#state-events
+    h2 Stativus.State.DefinitionEvents
+    .basic-api
+      mixin api_header('enterState: function()')
+      p This is the first of the important default state events that need to be defined.  This event gets called when a state
+        | gets entered.  This is 
+        em optional 
+        | and is added in the 
+        code addState()
+        | function and never changes.
+      h4 Example
+      pre
+        | statechart.addState('state_one', {
+        |   // Stativus.State.DefinitionParameters...
+        |   enterState: function(){
+        |     // code that sets up the view or state.
+        |   },
+        |   // more Stativus.State.DefinitionEvents...
+        | });
+      hr
+    .advanced-api
+      mixin api_header('willEnterState: function( statechart )', [{name: 'done', type: 'function'}])
+      p This is the pre-loading event to be used for async functionality. You would need to return 
+        strong true 
+        | from this function to pause the statechart allowing the async event to happen then you need to call 
+        code done()
+        |  to restart the statechart transition from state to state
+      pre
+        | sc.addState("#second", {
+        |   willEnterState: function(done){
+        |     $('#content .boosh').animate({
+        |       left: 911,
+        |       complete: function () {
+        |         done(); // REQUIRED!!: call this function to 
+        |                 // restart the statechart transitions
+        |       }
+        |     });
+        |     return true; // REQUIRED!!: return true so Stativus knows to stop the 
+        |                  // transitions and wait for animation or other async code.
+        |   },
+        |   enterState: function(){ ... }
+        | });
+    .advanced-api
+      mixin api_header('didEnterState: function()')
+      p This is the post-loading event that you can use to do any last minute functionality
+      pre
+        | sc.addState("#second", {
+        |   didEnterState: function(){
+        |     // setup refresh timers or fire an event
+        |   }
+        | });
+    .basic-api
+      mixin api_header('exitState: function()')
+      p This is the second most important of the default state events that need to be defined.  This event gets called when a state
+        | gets exited.  This is 
+        em optional 
+        | and is added in the 
+        code addState()
+        | function and never changes.
+      h4 Example
+      pre
+        | statechart.addState('state_one', {
+        |   // Stativus.State.DefinitionParameters...
+        |   exitState: function(){
+        |     // code that tears down the view or state.
+        |   },
+        |   // more Stativus.State.DefinitionEvents...
+        | });
+      hr
+    .advanced-api
+      mixin api_header('willExitState: function( done )', [{name: 'done', type: 'function'}])
+      p This is the pre-exit event to be used for async functionality. You would need to return 
+        strong true 
+        | from this function to pause the statechart allowing the async event to happen then you need to call 
+        code done()
+        |  to restart the statechart transition from state to state
+      pre
+        | sc.addState("#second", {
+        |   willExitState: function(done){
+        |     $('#content .boosh').animate({
+        |       right: 911,
+        |       complete: function () {
+        |         done(); // REQUIRED!!: call this function to 
+        |                 // restart the statechart transitions
+        |       }
+        |     });
+        |     return true; // REQUIRED!!: return true so Stativus knows to stop the 
+        |                  // transitions and wait for animation or other async code.
+        |   },
+        |   exitState: function(){ ... }
+        | });
+    .advanced-api
+      mixin api_header('didExitState: function()')
+      p This is the post-exiting event that you can use to do any last minute functionality
+      pre
+        | sc.addState("#second", {
+        |   didExitState: function(){
+        |     // kill variables; fire events; or send data.
+        |   }
+        | });

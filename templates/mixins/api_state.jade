@@ -1,0 +1,89 @@
+mixin api-state
+  section#state
+    h2 Stativus.State
+    .basic-api
+      mixin api_header('goToState( name, data )', [{name: 'name', type: 'String'},{name: 'data', type: 'Object || String', isOpt: true}])
+      p This is the heart and soul of the statechart. This is what starts the transition from one state to the next. 
+        | This is 
+        strong: em ONLY 
+        | to be called inside an event and as the last line after you 
+        em do 
+        | what you need to do.
+      p When you use the optional 
+        strong data 
+        | paramter, the data that is included will be passed along and attached to the destination state. The data 
+        | paramter can be either a String or an Object.
+      h4 Example
+      pre
+        | statechart.addState('loading', {
+        |   // Stativus.State.DefinitionParameters...
+        |   Stativus.State.DefinedEvents...
+        |   completeLoad: function(data){ // <= Event Definition
+        |     // do stuff with the 'data'
+        |     if (true) this.goToState('ready', 'data');
+        |     else this.goToState('notReady', { err: 'data' });
+        |   },
+        |   // other events
+        | });
+        | &nbsp;
+        | statechart.addState('ready', {
+        |   enterState: function() {
+        |     var data = this.getData('data'); // will yield 'data'
+        |   }
+        |   // other events
+        | });
+        | &nbsp;
+        | statechart.addState('notReady', {
+        |   enterState: function() {
+        |     var data = this.getData('err'); // will yield 'data'
+        |   }
+        |   // other events
+        | });
+        
+      hr
+    .basic-api
+      //- Section
+      - params = [{name: 'name', type: 'String'}, {name: 'isRecursive', type: 'Boolean', isOpt: !0}]
+      mixin api_header('goToHistoryState( name )', params)
+      p Must like 
+        code goToState() 
+        | This will transition to the last substate of 
+        em 'stateName'
+        | . This is 
+        strong: em ONLY 
+        | to be called inside an event and as the last line after you 
+        em do 
+        | what you need to do.
+      h4 Example
+      pre
+        | statechart.addState('loading', {
+        |   // Stativus.State.DefinitionParameters...
+        |   Stativus.State.DefinedEvents...
+        |   completeLoad: function(data){ // <= Event Definition
+        |     // do stuff with the 'data'
+        |     this.goToHistoryState('ready');
+        |   },
+        |   // other events
+        | });
+      hr
+    .basic-api
+      //- Section
+      - params = [{name: 'key', type: 'String'}, {name: 'value', type: 'ANY'}]
+      mixin api_header('setData( key, value )', params)
+      p This is the function that sets the local data to the state.  You would use this when you need to pass/set data to 
+        | be used in a state.
+      h4 Example
+      pre
+        | var state = statechart.getState('state_one');
+        | state.setData('id', 123);
+      hr
+    .basic-api
+      //- Section
+      mixin api_header('getData( key )', [{name: 'key', type: 'String'}])
+      p This is the function that gets the local data to the state.  You would use this when you need to retrieve local state data. 
+        | The beauty of the state data storage is that it won't conflict with any other states local data.
+      h4 Example
+      pre
+        | var state = statechart.getState('state_one');
+        | state.getData('id');
+      hr

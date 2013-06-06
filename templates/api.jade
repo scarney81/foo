@@ -1,0 +1,19 @@
+include mixins/api_stativus
+include mixins/api_statechart
+include mixins/api_state
+include mixins/api_state_options
+include mixins/api_state_events
+include mixins/api_test_events
+
+extends layout
+
+block content
+  h1 API Documentation
+  .span3
+  .span8
+    mixin api-stativus
+    mixin api-statechart
+    mixin api-state
+    mixin api-state-options
+    mixin api-state-events
+    mixin api-test-events

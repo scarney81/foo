@@ -1,0 +1,64 @@
+include api_header
+
+mixin api-test-events
+  section#test-events
+    h2 Stativus.TestStateObject
+    .testing-api
+      mixin api_header('enterState: function()')
+      p This is a function that will trigger an `enterState` call that can then test the state.
+      pre
+        | var state = statechart.loadState('state1');
+        | state.enterState();
+    .testing-api
+      mixin api_header('willEnterState: function(done)', [{name: 'done', type: 'function'}])
+      p This is a function that will trigger an `willEnterState` call that can then test the state. Example is using `qUnit` tests
+      pre
+        | var state = SC.loadState("#async");
+        | state.willEnterState(function(){
+        |   start();
+        | });
+        | stop();
+    .testing-api
+      mixin api_header('willExitCompleted: function()')
+      p This is a function that will return if the asynchronous call was made in the 'willEnterState' function
+      pre
+        | var state = SC.loadState("#async");
+        | state.willEnterState(function(){
+        |   start();
+        |   ok(state.willExitCompleted(), 'Will exit async call was completed');
+        |   equal(mockObject.willExitCount, 1, 'willExitCount was successfully called');
+        | });
+        | stop();
+    .testing-api
+      mixin api_header('exitState: function()')
+      p This is a function that will trigger an `exitState` call that can then test the state.
+      pre
+        | var state = statechart.loadState('state1');
+        | state.exitState();
+    .testing-api
+      mixin api_header('willExitState: function(done)', [{name: 'done', type: 'function'}])
+      p This is a function that will trigger an `willExitState` call that can then test the state. Example is using `qUnit` tests
+      pre
+        | var state = SC.loadState("#async");
+        | state.willExitState(function(){
+        |   start();
+        | });
+        | stop();
+    .testing-api
+      mixin api_header('willExitCompleted: function()')
+      p This is a function that will return if the asynchronous call was made in the 'willEnterState' function
+      pre
+        | var state = SC.loadState("#async");
+        | state.willExitState(function(){
+        |   start();
+        |   ok(state.willExitCompleted(), 'Will exit async call was completed');
+        |   equal(mockObject.willExitCount, 1, 'willExitCount was successfully called');
+        | });
+        | stop();
+    .testing-api
+      mixin api_header('transitionTo: function(name)', [{name: 'name', type: 'String'}])
+      p This is a function that will return true if the last action resulted in the state needing to transition to a different state
+      pre
+        | var state = SC.loadState("#async");
+        | state.enterState(); // switch state that immediately transitions to a new state
+        | ok(state.transitionedTo('newState'), 'state proper transition');

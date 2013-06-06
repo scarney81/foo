@@ -1,0 +1,131 @@
+include api_header
+
+mixin api-state-options
+  section#state-options
+    h2 Stativus.State.DefinitionParameters
+    .basic-api
+      mixin api_header('globalConcurrentState', {isOpt: !0, type: 'String', default: 'default'}, !0)
+      p This is the name of the global concurrent state that this state belongs to.  This is set in the
+        code addState()
+        | function and does not ever change.
+      h4 Example
+      pre
+        | statechart.addState('state_one', {
+        |   globalConcurrentState: 'modal_states'
+        |   // more Stativus.State.DefinitionParameters...
+        | });
+      hr
+    .basic-api
+      mixin api_header('parentState', {isOpt: !0, type: 'String', default: 'undefined'}, !0)
+      p This value sets who the parent state of this substate is.  You do not need to add these in order, even though
+        | its a good idea.  If you do not set a value or set it to 
+        em null 
+        | the statechart assumes that this is a top level state. It is added once in
+        code addState()
+        | function and never changes.
+      h4 Example
+      pre
+        | statechart.addState('substate_one', {
+        |   parentState: 'state_one'
+        |   // more Stativus.State.DefinitionParameters...
+        | });
+      hr
+    .basic-api
+      mixin api_header('initialSubstate', {type: 'String', default: 'undefined'}, !0)
+      p This value sets in a parent state to tell it what substate to enter when someone calls
+        code this.goToState('\< parentStateName \>')
+        | . Technically, it isn't 
+        em required 
+        | persay, but it bad practice to just enter a parent state with substates and not go to a substate. 
+        | This is added in the 
+        code addState()
+        | function and never changes.
+      h4 Example
+      pre
+        | statechart.addState('state_one', {
+        |   initialSubstate: 'substate_one',
+        |   // more Stativus.State.DefinitionParameters...
+        | });
+      hr
+    .advanced-api
+      mixin api_header('substatesAreConcurrent', {type: 'Boolean', default: 'undefined'}, !0)
+      p This value sets in a parent state to tell it that it should enter all of its substates. This gives you the fine 
+        | grain control in substates to do multiple things at the same time. You do not use 
+        code initialSubstate
+        |  with this because it doesn't make any sense. 
+        | This is added in the 
+        code addState()
+        | function and never changes.
+      h4 Example
+      pre
+        | statechart.addState('state_one', {
+        |   substatesAreConcurrent: true,
+        |   // more Stativus.State.DefinitionParameters...
+        | });
+      hr
+    .advanced-api
+      mixin api_header('states', {type: 'Array', default: 'undefined'}, !0)
+      p You can define substates within a state for a more concise way of defining your statechart. You do this by defining an 
+        | array of hashes with the same APIs as 
+        strong Stativus.State.DefinitionParameters 
+        | and
+        strong Stativus.State.DefinitionEvents
+        | . There are two ways 
+        | to do this. This is added in the 
+        code addState()
+        | function and never changes.
+      h4 Example Type #1: 
+      h5 create configuration code as a HASH
+      pre
+        | // Example #1:
+        | statechart.addState('state_one', {
+        |   states: [
+        |     {
+        |       name: 'substate_one',
+        |       enterState: function(){
+        |         // define function
+        |       }
+        |     }
+        |   ],
+        |   // more Stativus.State.DefinitionParameters...
+        | });
+        | // Example #2: n-level nesting
+        | statechart.addState('state_one', {
+        |   states: [
+        |     {
+        |       name: 'substate_one',
+        |       enterState: function(){
+        |         // define function
+        |       },
+        |       states: [
+        |         {
+        |           name: 'sub-substate_one'
+        |           // more Stativus.State.DefinitionParameters...
+        |         }
+        |       ]
+        |     }
+        |   ],
+        |   // more Stativus.State.DefinitionParameters...
+        | });
+      h4 Example Type #2:
+      h5 You can also pass an array where the first argument 
+        strong (String - REQUIRED) 
+        | is the name, next n-argument are config hashes
+      pre
+        | // Example #3: With shared functionality
+        | statechart.addState('state_one', {
+        |   states: [
+        |     ['#substate_one', mySharedFunctions, /* <= shared function hash >*/ {
+        |       enterState: function(){
+        |         // define function
+        |       }
+        |     }],
+        |     ['#substate_two', mySharedFunctions, /* <= shared function hash >*/ {
+        |       enterState: function(){
+        |         // define function
+        |       }
+        |     }],
+        |   // more Stativus.State.DefinitionParameters...
+        | });
+        | 
+      hr

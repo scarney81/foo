@@ -1,0 +1,16 @@
+include api_header
+
+mixin api-stativus()
+  section#stativus
+    h2 Stativus
+    .basic-api
+      mixin api_header('createStatechart()')
+      p This is the function to actually create the statechart.  This is the only function that needs to be called 
+        strong: em first
+        |  in order for the other functions to work.  This returns a 
+        strong: em Stativus.Statechart
+        |  object.  You can create as many statecharts as you want. You can even create them in your views to control
+        |  how the view works in any of the MVC frameworks out there
+      h4 Example
+      pre
+        | var statechart = Stativus.createStatechart();

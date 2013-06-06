@@ -1,0 +1,17 @@
+include mixins/nav
+
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title Stativus
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(href='/assets/css/bootstrap.min.css', rel='stylesheet')
+    link(href='/assets/css/app.css', rel='stylesheet')
+    block styles
+  body
+    mixin nav
+    .container
+      block content
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js')
+    script(src='/assets/js/lib/bootstrap.min.js')
+    block scripts
